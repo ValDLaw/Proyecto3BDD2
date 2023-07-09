@@ -1,27 +1,32 @@
 import numpy as np
 import math
 from rtree import index
+from extraccion_de_caracteristicas import load_json
 
-def knn_rtree(faces_encoding, k , dataset):
-    name = 'knn/rtree_index'
 
-    p = index.Property()
-    p.dimension = 128  # D
-    p.buffering_capacity = 4  # M
-    p.dat_extension = 'data'
-    p.idx_extension = 'index'
-    idx = index.Index(name, properties=p)
+def knn_rtree(faces_encoding, k, dataset):
+    #index_name = 'knn/rtree_index'
 
+    # Configurar las propiedades del índice R-tree
+    properties = index.Property()
+    properties.dimension = 128  # Tamaño del vector característico
+    properties.buffering_capacity = 4
+    properties.dat_extension = 'data'
+    properties.idx_extension = 'index'
+
+    # Crear el índice R-tree
+    idx = index.Index(properties=properties)
+
+    # Construir el índice si está vacío
     if idx.count == 0:
-        c = 0
-        for path, matrix_vector_faces in dataset:
+        for i, (_, matrix_vector_faces) in enumerate(dataset):
             for vector in matrix_vector_faces:
                 q = tuple(vector)
-                idx.insert(c, q)
-            c += 1
+                idx.insert(i, q)
 
+    # Realizar la consulta kNN
     query = tuple(faces_encoding[0])
+    results = list(idx.nearest(coordinates=query, num_results=k))
 
-    lres = list(idx.nearest(coordinates=query, num_results=k))
-
-    return [dataset[i][0] for i in lres[:k]]
+    # Obtener las rutas de los resultados
+    return [dataset[i][0] for i in results[:k]]

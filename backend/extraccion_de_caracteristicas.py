@@ -38,12 +38,28 @@ def save_encoded_faces(encoded_faces, output_file):
 image_directory = "../images/"
 
 # Codificar los rostros en las imágenes del directorio
-encoded_faces = encode_faces(image_directory)
+#encoded_faces = encode_faces(image_directory)
 
 # Guardar los rostros codificados en un archivo JSON
 output_file = "encoded_faces.json"
-save_encoded_faces(encoded_faces, output_file)
+#save_encoded_faces(encoded_faces, output_file)
 
+def load_json():
+    # Open and load the JSON file
+    with open("encoded_faces.json", "r") as json_file:
+        decoded_json = json.load(json_file)
+
+    # Dataset of each image and its vectors
+    dataset = []
+    for path, vector_list in decoded_json.items():
+        dataset.append((path, vector_list))
+    
+    return dataset
+
+
+ds = load_json()
+
+print(ds[10])
 
 '''
 
