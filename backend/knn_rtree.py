@@ -1,4 +1,5 @@
 import numpy as np
+import face_recognition
 import math
 from rtree import index
 from extraccion_de_caracteristicas import load_json
@@ -18,11 +19,13 @@ def knn_rtree(faces_encoding, k, dataset):
     idx = index.Index(properties=properties)
 
     # Construir el índice si está vacío
-    if idx.count == 0:
-        for i, (_, matrix_vector_faces) in enumerate(dataset):
+    if idx.get_size() < 1:
+        c = 0
+        for path, matrix_vector_faces in dataset:
             for vector in matrix_vector_faces:
                 q = tuple(vector)
-                idx.insert(i, q)
+                idx.insert(c, q)
+            c+=1
 
     # Realizar la consulta kNN
     query = tuple(faces_encoding[0])
