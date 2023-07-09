@@ -14,6 +14,7 @@ def knn_pq(faces_encoding, dataset, k):
             resultK.append(heapq.heappop(result))
         else:
             break
+        
     return [path for path, distance in resultK]
 
 
