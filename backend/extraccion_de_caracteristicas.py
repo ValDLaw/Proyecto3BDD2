@@ -18,20 +18,24 @@ def encode_faces(directory):
         for file in files:
             path = os.path.join(root, file)
 
-            image = face_recognition.load_image_file(path)
-            faces = face_recognition.face_encodings(image)
+            if file.endswith((".jpg", ".jpeg", ".png")):
+                image = face_recognition.load_image_file(path)
+                faces = face_recognition.face_encodings(image)
 
-            if len(faces) > 0:
-                encoded_faces[path] = faces
+                if len(faces) > 0:
+                    if root not in encoded_faces:
+                        encoded_faces[root] = []
+                    encoded_faces[root].append(faces)
 
     return encoded_faces
+
 
 def save_encoded_faces(encoded_faces, output_file):
     with open(output_file, "w") as json_file:
         json.dump(encoded_faces, json_file, cls=NAEncoder)
 
 # Directorio de imágenes
-image_directory = "..images/"
+image_directory = "../images/"
 
 # Codificar los rostros en las imágenes del directorio
 encoded_faces = encode_faces(image_directory)
@@ -41,6 +45,7 @@ output_file = "encoded_faces.json"
 save_encoded_faces(encoded_faces, output_file)
 
 
+'''
 
 def extract_features(image_path):
     # Cargar la imagen y convertirla a un arreglo
@@ -108,3 +113,4 @@ for i in image_features:
 
 # Imprimir el número de vectores característicos generados
 print("Se extrajeron", len(image_features), "vectores característicos de tamaño 128.")
+'''
