@@ -21,9 +21,10 @@ CORS(app, origin="*")
 dataset = extraccion_de_caracteristicas.load_json()
 app.config["UPLOAD_FOLDER"] = os.environ.get("UPLOAD_FOLDER")
 
+
 @app.route("/sequential", methods=["POST"])
 def upload_image_sequential():
-    file = request.files.get("file")
+    file = request.files["file"]
     random_seed = ShortUUID().random(length=50)
     img_id = secure_filename(str(random_seed) + str(file.filename))
     file.save(os.path.join(app.config["UPLOAD_FOLDER"], img_id))
@@ -37,11 +38,17 @@ def upload_image_sequential():
 
 @app.route("/rtree", methods=["POST"])
 def upload_image_rtree():
-    image_path = request.form['image_path']
-    query_image = face_recognition.load_image_file(image_path)
+    file = request.files["file"]
+    random_seed = ShortUUID().random(length=50)
+    img_id = secure_filename(str(random_seed) + str(file.filename))
+    file.save(os.path.join(app.config["UPLOAD_FOLDER"], img_id))
+
+    #image_path = request.form['image_path']
+    query_image = face_recognition.load_image_file(file)
     face_encodings = face_recognition.face_encodings(query_image)
     k = int(request.form['k'])
-    return knn_rtree(face_encodings, dataset, k)
+
+    return knn_rtree(face_encodings, dataset, k, 12800)
 
 @app.route("/")
 def index():
