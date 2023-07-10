@@ -3,32 +3,19 @@ import os
 import json
 import numpy as np
 import random
-from json import JSONEncoder
 
-class NumpyArrayEncoder(JSONEncoder):
-    def default(self, obj):
-        if isinstance(obj, np.ndarray):
-            return obj.tolist()
-        return JSONEncoder.default(self, obj)
+ERES_VALERIA = False
 
+def formateoPath(path, ERES_VALERIA = False):
+    if ERES_VALERIA:
+        parts = path.split('/')
+        startIndex = len(parts) - 3 
+        result = "../"+('/'.join(parts[startIndex:]))
+    else:
+        result = path
+    return result
 
 def initialize():
-    images_directory = os.path.join(os.path.dirname(__file__), "../images")
-    with open("encoded_faces.json", "w") as json_file:
-        dictionary = {}
-        for root, subdirectories, files in os.walk(images_directory):
-            for file in files:
-                path = os.path.join(root, file)
-                if os.path.basename(file) != ".DS_Store":
-                    image = face_recognition.load_image_file(path)
-                    faces_on_image = face_recognition.face_encodings(image)
-
-                    if len(faces_on_image) > 0:
-                        dictionary[path] = faces_on_image
-                    
-        json.dump(dictionary, json_file)
-
-def initialize2(): #Para no usar eso del NumpyArray Encoder
     images_directory = os.path.join(os.path.dirname(__file__), "../images")
     with open("encoded_faces.json", "w") as json_file:
         dictionary = {}
@@ -40,11 +27,11 @@ def initialize2(): #Para no usar eso del NumpyArray Encoder
                     face_encod_vector = face_recognition.face_encodings(image)
 
                     if len(face_encod_vector) > 0:
+                        path = formateoPath(path, ERES_VALERIA)
                         dictionary[path] = (face_encod_vector[0]).tolist()
-                    
-    json.dump(dictionary, json_file)
+        json.dump(dictionary, json_file)
 
-initialize2()
+#initialize()
 
 def load_json():
     #Open and load the json file
