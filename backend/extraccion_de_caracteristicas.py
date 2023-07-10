@@ -37,10 +37,10 @@ def initialize2(): #Para no usar eso del NumpyArray Encoder
                 path = os.path.join(root, file)
                 if os.path.basename(file) != ".DS_Store":
                     image = face_recognition.load_image_file(path)
-                    face_encod_vector = (face_recognition.face_encodings(image)[0]).tolist()
+                    face_encod_vector = face_recognition.face_encodings(image)
 
                     if len(face_encod_vector) > 0:
-                        dictionary[path] = face_encod_vector
+                        dictionary[path] = (face_encod_vector[0]).tolist()
                     
     json.dump(dictionary, json_file)
 
