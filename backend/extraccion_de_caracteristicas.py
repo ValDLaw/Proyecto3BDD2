@@ -26,7 +26,7 @@ def initialize():
                         dictionary[path] = (face_encod_vector[0]).tolist()
         json.dump(dictionary, json_file)
 
-initialize()                    
+#initialize()
 
 def load_json():
     #Open and load the json file
