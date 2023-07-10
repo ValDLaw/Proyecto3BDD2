@@ -4,10 +4,15 @@ import json
 import numpy as np
 import random
 
-def formateoPath(path):
-    parts = path.split('/')
-    startIndex = len(parts) - 3 
-    result = "../"+('/'.join(parts[startIndex:]))
+ERES_VALERIA = False
+
+def formateoPath(path, ERES_VALERIA = False):
+    if ERES_VALERIA:
+        parts = path.split('/')
+        startIndex = len(parts) - 3 
+        result = "../"+('/'.join(parts[startIndex:]))
+    else:
+        result = path
     return result
 
 def initialize():
@@ -22,7 +27,7 @@ def initialize():
                     face_encod_vector = face_recognition.face_encodings(image)
 
                     if len(face_encod_vector) > 0:
-                        path = formateoPath(path)
+                        path = formateoPath(path, ERES_VALERIA)
                         dictionary[path] = (face_encod_vector[0]).tolist()
         json.dump(dictionary, json_file)
 
