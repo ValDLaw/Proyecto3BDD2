@@ -5,7 +5,7 @@ from rtree import index
 from extraccion_de_caracteristicas import load_json
 
 
-def knn_rtree(faces_encoding, k, dataset):
+def knn_rtree(faces_encoding, dataset, k):
     #index_name = 'knn/rtree_index'
 
     # Configurar las propiedades del índice R-tree
