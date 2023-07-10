@@ -44,6 +44,8 @@ def initialize2(): #Para no usar eso del NumpyArray Encoder
                     
     json.dump(dictionary, json_file)
 
+initialize2()
+
 def load_json():
     #Open and load the json file
     file = open("encoded_faces.json", "r")
