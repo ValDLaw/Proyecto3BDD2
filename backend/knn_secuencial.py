@@ -5,7 +5,7 @@ def knn_pq(faces_encoding, dataset, k):
     result = []
     heapq.heapify(result)
     for path, matrix_vector_faces in dataset:
-        for distance in face_recognition.face_distance(matrix_vector_faces, faces_encoding[0]):
+        for distance in face_recognition.face_distance(matrix_vector_faces, faces_encoding):
             result.append((path, distance))
 
     resultK=[]
@@ -14,7 +14,9 @@ def knn_pq(faces_encoding, dataset, k):
             resultK.append(heapq.heappop(result))
         else:
             break
-        
+    res = heapq.nsmallest(k , result)
+    print(result)
+    print(res)
     return [path for path, distance in resultK]
 
 
