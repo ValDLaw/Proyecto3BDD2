@@ -26,7 +26,23 @@ def initialize():
                     if len(faces_on_image) > 0:
                         dictionary[path] = faces_on_image
                     
-        json.dump(dictionary, json_file, cls=NumpyArrayEncoder)
+        json.dump(dictionary, json_file)
+
+def initialize2(): #Para no usar eso del NumpyArray Encoder
+    images_directory = os.path.join(os.path.dirname(__file__), "../images")
+    with open("encoded_faces.json", "w") as json_file:
+        dictionary = {}
+        for root, subdirectories, files in os.walk(images_directory):
+            for file in files:
+                path = os.path.join(root, file)
+                if os.path.basename(file) != ".DS_Store":
+                    image = face_recognition.load_image_file(path)
+                    face_encod_vector = (face_recognition.face_encodings(image)[0]).tolist()
+
+                    if len(face_encod_vector) > 0:
+                        dictionary[path] = face_encod_vector
+                    
+    json.dump(dictionary, json_file)
 
 def load_json():
     #Open and load the json file
