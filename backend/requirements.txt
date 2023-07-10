@@ -6,3 +6,7 @@ numpy==1.25.0
 Pillow==10.0.0
 psycopg2==2.9.6
 Rtree==1.0.1
+flask==2.3.2
+flask-cors==4.0.0
+shortuuid==1.0.11
+requests==2.26.0
