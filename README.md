@@ -7,7 +7,6 @@
 * Sofía García Quintana (202110567)
 
 ## KNN-Secuencial
-## KNN-RTree
 ### Using Priority Queue
 ### Range Search  
 Para el análisis de la distribución de las distancias, empleamos la regla empírica, también conocida como la regla de los 68-95-99.7, la cual se basa en la distribución normal y establece que aproximadamente el 68% de los datos se encuentran dentro de una desviación estándar de la media, el 95% se encuentran dentro de dos desviaciones estándar y el 99.7% se encuentran dentro de tres desviaciones estándar. En base a ello calculamos el promedio y desviación estándar de todas las distancias, considerando la imagen en 'test/teofilo.png' como base.  
@@ -68,3 +67,6 @@ Para la búsqueda por rango, los resultados con los tres radios diferentes fuero
 | N=3200   | 0.01186585426    | 0.01106381416   | 0.00871992111  |
 | N=6400   | 0.02130794525    | 0.02114367485   | 0.01680111885  |
 | N=12800  | 0.03789687157    | 0.04025101662   | 0.03456902504  |
+
+
+## KNN-RTree
