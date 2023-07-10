@@ -1,13 +1,13 @@
 import face_recognition
 import os
 import json
-import numpy
+import numpy as np
 import random
 from json import JSONEncoder
 
 class NumpyArrayEncoder(JSONEncoder):
     def default(self, obj):
-        if isinstance(obj, numpy.ndarray):
+        if isinstance(obj, np.ndarray):
             return obj.tolist()
         return JSONEncoder.default(self, obj)
 
@@ -52,6 +52,6 @@ def load_json():
     #Dataset of each image and its vectors
     dataset = []
     for path, matrix_vector_faces in decodedJson.items():
-        dataset.append((path, numpy.asarray(decodedJson[path])))
+        dataset.append((path, np.asarray(decodedJson[path])))
     
     return dataset
