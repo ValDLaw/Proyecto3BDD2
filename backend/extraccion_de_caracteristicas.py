@@ -5,6 +5,12 @@ import numpy as np
 import random
 from json import JSONEncoder
 
+def formateoPath(path):
+    parts = path.split('/')
+    startIndex = len(parts) - 3 
+    result = "./"+('/'.join(parts[startIndex:]))
+    return result
+
 def initialize():
     images_directory = os.path.join(os.path.dirname(__file__), "../images")
     with open("encoded_faces.json", "w") as json_file:
@@ -17,9 +23,10 @@ def initialize():
                     face_encod_vector = face_recognition.face_encodings(image)
 
                     if len(face_encod_vector) > 0:
+                        path = formateoPath(path)
                         dictionary[path] = (face_encod_vector[0]).tolist()
 
-#initialize()                    
+initialize()                    
 
 def load_json():
     #Open and load the json file
