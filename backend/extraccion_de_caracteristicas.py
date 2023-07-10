@@ -25,6 +25,7 @@ def initialize():
                     if len(face_encod_vector) > 0:
                         path = formateoPath(path)
                         dictionary[path] = (face_encod_vector[0]).tolist()
+        json.dump(dictionary, json_file)
 
 initialize()                    
 
