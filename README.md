@@ -6,8 +6,42 @@
 * Valentín Quezada Amour (202120570)
 * Sofía García Quintana (202110567)
 
+## Descripción del producto  
+## Dataset  
+Para la construcción de nuestra página, utilizamos la colección de referencia pública 'Labeled Faces in the Wild' de la Universidad de Massachusetts Amherstdataset para la verificación facial, también conocida como coincidencia de pares. Esta consiste en una colección de carpetas identificadas por el nombre de personas, cuyo contenido son imágenes (o imagen) de la misma. La estructura es la siguiente:  
+
+```bash
+./images/
+├── Aaron_Eckhart/
+├── Aaron_Guiel/
+├── Aaron_Patterson/
+├── ...
+└── Zydrunas_Ilgauskas/
+```
+## Extracción de características  
+Para la extracción de características, utilizamos principalmente dos funciones de la librería **Face Recognition**: *face_encodings* y *load_image_file*. Hallamos el vector característico de tamaño 128 de cada imagen del datasetsPara no realizar el proeso de cálculo del vector caracteri
+
+```python
+images_directory = os.path.join(os.path.dirname(__file__), "../images")
+    with open("encoded_faces.json", "w") as json_file:
+        dictionary = {}
+        for root, subdirectories, files in os.walk(images_directory):
+            for file in files:
+                path = os.path.join(root, file)
+                if os.path.basename(file) != ".DS_Store":
+                    image = face_recognition.load_image_file(path)
+                    face_encod_vector = face_recognition.face_encodings(image)
+
+                    if len(face_encod_vector) > 0:
+                        dictionary[path] = (face_encod_vector[0]).tolist()
+                    
+```
+
+
 ## KNN-Secuencial
 ### Using Priority Queue
+
+
 ### Range Search  
 Para el análisis de la distribución de las distancias, empleamos la regla empírica, también conocida como la regla de los 68-95-99.7, la cual se basa en la distribución normal y establece que aproximadamente el 68% de los datos se encuentran dentro de una desviación estándar de la media, el 95% se encuentran dentro de dos desviaciones estándar y el 99.7% se encuentran dentro de tres desviaciones estándar. En base a ello calculamos el promedio y desviación estándar de todas las distancias, considerando la imagen en 'test/teofilo.png' como base.  
 
@@ -18,7 +52,6 @@ def distances(dataset):
     for path, matrix_vector_faces in dataset:
         for distance in face_recognition.face_distance(matrix_vector_faces, faces_encoding[0]):
             vector_dist.append(distance)
-    print("AQUIIIII")
     print(vector_dist)
 
     return list((np.mean(vector_dist), np.std(vector_dist)))
@@ -41,7 +74,10 @@ Obtuvimos los siguientes tres radios:
 ```
 
 ## KNN-HighD
-## Experimento  
+### Maldición de la dimensionalidad
+Incluir imágenes/diagramas para una mejor comprensión
+
+## Experimentación  
 Manteniendo un valor de K = 8
 
 | N size   | KNN-SecuencialPQ | KNN-RTree   | KNN-HighD  |
