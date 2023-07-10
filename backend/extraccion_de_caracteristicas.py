@@ -8,7 +8,7 @@ from json import JSONEncoder
 def formateoPath(path):
     parts = path.split('/')
     startIndex = len(parts) - 3 
-    result = "./"+('/'.join(parts[startIndex:]))
+    result = "../"+('/'.join(parts[startIndex:]))
     return result
 
 def initialize():
