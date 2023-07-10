@@ -3,7 +3,6 @@ import os
 import json
 import numpy as np
 import random
-from json import JSONEncoder
 
 def formateoPath(path):
     parts = path.split('/')
