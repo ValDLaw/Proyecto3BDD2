@@ -301,7 +301,7 @@ Manteniendo un valor de K = 8, realizamos una serie de experimentos para distint
 
 **KNN-RTree:** Para N pequeños, el tiempo de ejecución es mayor. A medida que el tamaño del conjunto de datos aumenta, el tiempo de ejecución disminuye significativamente, pues el R-Tree indexa los datos para realizar búsquedas más rápidas a medida que el conjunto de datos se vuelve más grande.
 
-**KNN-KDTree:** Tiene un tiempo de ejecución muy bajo para conjuntos de datos pequeños, pero a medida que el tamaño del conjunto de datos aumenta, el tiempo de ejecución también aumenta. A medida que el tamaño del conjunto de datos aumenta, es posible que el algoritmo tenga dificultades para manejar la alta dimensionalidad y su rendimiento se ve afectado.
+**KNN-KDTree:** muestra un tiempo de ejecución más alto a medida que aumenta el tamaño del conjunto de datos. Es más eficiente en términos de tiempo de ejecución en comparación con el KNN estándar cuando se trabaja con conjuntos de datos de alta dimensionalidad.
 
 **KNN-Faiss:** Muestra el tiempo de ejecución más bajo en comparación con los otros algoritmos para todos los tamaños de conjunto de datos. Faiss es una biblioteca de búsqueda de vectores de alta eficiencia y está especialmente diseñada para conjuntos de datos grandes y de alta dimensionalidad, lo que permite realizar búsquedas KNN de manera rápida y eficiente.
 
