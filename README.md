@@ -188,6 +188,7 @@ Manteniendo un valor de K = 8
 <div align="center">
  <img src="frontend/src/assets/grafico1.png" alt="Image" />
 </div>
+
 Para la búsqueda por rango, los resultados con los tres radios diferentes fueron los siguientes:  
 
 | N size   | R=0.709143053656 | R=0.6196988489  | R=0.53025464414|
@@ -201,6 +202,9 @@ Para la búsqueda por rango, los resultados con los tres radios diferentes fuero
 | N=6400   | 21.13604         | 18.03303        | 17.24171       |
 | N=12800  | 37.28199         | 35.25496        | 35.14004       |
 
+<div align="center">
+ <img src="frontend/src/assets/grafico2.png" alt="Image" />
+</div>
 
 ## KNN-RTree
 
