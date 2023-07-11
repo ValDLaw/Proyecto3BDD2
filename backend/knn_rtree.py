@@ -1,9 +1,10 @@
 import numpy as np
 import face_recognition
 import math
-from rtree import index
-from extraccion_de_caracteristicas import load_json
+import rtree
+from extraccion_de_caracteristicas import formateoPath
 
+ERES_VALERIA = False
 
 def rtree_index(n, dataset):
     #1- borrando archivos anteriores
@@ -32,7 +33,7 @@ def rtree_index(n, dataset):
             c+=1
     idx.close()
 
-def knn_rtree(faces_encoding, k, n, dataset):
+def knn_rtree(faces_encoding, dataset, k, n):
     '''
     #1- borrando archivos anteriores
     if os.path.exists(index_name+"feature_vector.dat"):
