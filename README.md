@@ -231,3 +231,15 @@ def knn_rtree(faces_encoding, dataset, k, n):
     return [formateoPath(dataset[i][0], path) for i in results[:k]]
 
 ```
+
+
+# Conclusiones
+
+Se pudo implementar un variedad de algoritmos optimizados e indices multidimensionales y se pudo comparar la eficiencia de cada uno y los recursos que utilizand, ademas de la presicion
+
+Poder tener una escabiliadad y adaptibilidad del programa para manejra adecuadamente grandes volumenes de datos
+
+Se puedo concluir que KNN-Faiss es un buen indice de busqueda, por ser eficiente, y ser capaz retornar el resultado en poco tiempo comparados con los demas indices
+
+Se pudo observar que el KNN-SecuencialPQ es el menos eficiente comparado con los demas indices
+
