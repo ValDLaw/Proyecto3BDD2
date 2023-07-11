@@ -26,7 +26,7 @@
           <div class="response-image-wrapper">
             <img v-if="responseImages[0].url" :src="responseImages[0].url" :alt="responseImages[0].id" class="response-image" />
           </div>
-          <p>{{responseImages[0].url}}</p>
+          <p>{{responseImages[0].url.split('/')[2].replace(/_/g, ' ')}}</p>
         </div>
       </div>
       <div class="input-container" v-if="uploadedImage">
