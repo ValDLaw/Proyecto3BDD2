@@ -166,10 +166,9 @@ def knn_rtree(faces_encoding, dataset, k, n):
 ## KNN-HighD
 ###  KD-Tree
 
-Una estructura de datos muy útil para una búsqueda que involucran una clave de búsqueda multidimensional, como la búsqueda de rangos o de los vecinos más cercanos.
-Es recomendado no usar altas dimensiones porque hace que el algoritmo visite muchas más ramas y el espacio entre los puntos aumenta de manera exponencial, haciendo que haya mayor overlap entre distintas particiones.
+Un kd-tree es una estructura de datos que se encarga de organizar puntos en un espacio k-dimensional. Cada nodo que no es hoja representa un hiperplano, dividiendo el espacio en dos partes (de manera binaria). Es muy útil para una búsqueda que involucran una clave de búsqueda multidimensional, como la búsqueda de rangos o de los vecinos más cercanos. Sin embargo, es recomendado no usar altas dimensiones porque hace que el algoritmo visite muchas más ramas y el espacio entre los puntos aumenta de manera exponencial, haciendo que haya mayor overlap entre distintas particiones.
 
-La manera en la que lo implementamos fue aprovechando la libreria de scikit-learn que ya tenia implementada una estructura de KDTree.
+La manera en la que lo implementamos fue aprovechando la libreria de scikit-learn que ya tenia implementada una estructura de KDTree, la cual usa como métrica de distancia por default la Distancia Minkowski con p=2, lo que viene a ser la Distancia Euclideana.
 
 Construimos el indice de tal manera que lo adaptamos a como tenemos el dataset lleno de sets de (path, encodings).
 
@@ -188,16 +187,13 @@ def KDTree_index(dataset):
 Y despues en el search, en base al indice creado, haciamos la query de tal manera que recibieramos el path de los K elementos mas cercanos.
 
 ```python
-def FaissIndex_Search(query, dataset, k, n):
-    q = np.reshape(np.array(query,dtype='f'), (1,128))
-    ind = faiss.read_index("./knn/faiss/faiss_feat_vector_"+str(n)+".idx")
-    n, indx = ind.search(q, k=k)
-    indx = indx[0].astype(int)
+def KDTree_search(faces_encoding, dataset, k, indKD):
     results = []
-    for i in indx:
-        pathToSave = formateoPath(dataset[i][0], path)
+    result_dist, result_id = indKD.query(faces_encoding, k=k)
+    for id, dist in zip(result_id[0], result_dist[0]):
+        pathToSave = formateoPath(dataset[id][0])
         results.append(pathToSave)
-        return results
+    return results
 ```
 
 ### Faiss (HNSW)
@@ -212,7 +208,7 @@ Cada nodo está conectado con otros nodos cercanos en el espacio, de tal manera 
  <img src="frontend/src/assets/hsnw.jpg" alt="Image" />
 </div>
 
-Primero, construimos el indice con 128 dimensiones. En caso ese indice ya exista, lo borramos y lo creamos de nuevo.
+Primero, construimos el indice con 128 dimensiones. En caso ese indice ya exista, lo borramos y lo creamos de nuevo. La distancia que usa el Faiss HNSW, es de Distancia Euclideana.
 
 ```python
 def buildFaissIndex(n, dataset):
