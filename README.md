@@ -7,6 +7,13 @@
 * Sofía García Quintana (202110567)
 
 ## Descripción del producto  
+Nuestro producto es de un sistema de búsqueda y recuperación de datos multimedia con un enfoque en la búsqueda de imágenes, comparando muchos índices y su eficiencia. 
+Permitirá a los usuarios poder subir una foto propia o cualquiera, y poder obtener las fotos más similares a la enviada 
+El programa utiliza algoritmos de búsqueda para asegurar que los resultados sean los más precisos, eficientes en un corto tiempo. Para esto se utilizan índices y algoritmos multidimensionales 
+Permitirá al usuario descubrir imágenes similares a través de sus características 
+Finalmente, se programa está diseñado para soportar grandes volúmenes de datos 
+
+Nos enfocamos en la eficiencia y precisión de los resultados utilizando los índices multidimensionales 
 ## Dataset  
 Para la construcción de nuestra página, utilizamos la colección de referencia pública 'Labeled Faces in the Wild' de la Universidad de Massachusetts Amherstdataset para la verificación facial, también conocida como coincidencia de pares. Esta consiste en una colección de carpetas identificadas por el nombre de personas, cuyo contenido son imágenes (o imagen) de la misma. La estructura es la siguiente:  
 
