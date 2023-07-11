@@ -1,43 +1,43 @@
 <template>
+  <div v-if="loading" class="loading-screen">
+    <div class="loader"></div>
+    <p>Cargando...</p>
+  </div>  
+
   <div class="container">
-
-    <div v-if="loading" class="loading-screen">
-      <div class="loader"></div>
-      <p>Cargando...</p>
-    </div>  
-
     <div class="input-container">
       <label for="k">Valor k:</label>
       <div class="custom-input">
         <input type="number" id="k" min="1" v-model="k" />
       </div>
-    </div>
-    
-    <input id="fileInput" type="file" @change="handleFileUpload" accept="image/*" />
-    <label for="fileInput" class="custom-file-button">Subir foto</label>
-    
-    <div class="container" v-if="uploadedImage">
-      <div class="image-container">
-        <img :src="uploadedImage" alt="Imagen cargada" class="uploaded-image" />
-      </div>
-      <button @click="submitImage" class="custom-file-button">¡Descúbre tu doppelgänger!</button>
+      <input id="fileInput" type="file" @change="handleFileUpload" accept="image/*" />
+      <label for="fileInput" class="custom-file-button">Subir foto</label>
     </div>
 
-    <div v-if="responseImages.length > 0">
-      <h2>Imágenes obtenidas:</h2>
-      <div class="image-container">
-        <!-- Muestra la primera imagen de forma especial -->
-        <div class="original-image-container">
-          <h3>Este es tu doppelgänger famoso!</h3>
-          <img :src="responseImages[0].url" :alt="responseImages[0].id" class="original-image" />
+    <div class="image-container">
+      <div class="uploaded-image-container" v-if="uploadedImage">
+        <h2>Este eres tú:</h2>
+        <div class="image-wrapper">
+          <img :src="uploadedImage" alt="Imagen cargada" class="uploaded-image" />
         </div>
-        <p>Para ver más resultados, puedes mirar abajo.</p>
       </div>
-      <div class="result-images-container">
-        <div v-for="(image, index) in responseImages.slice(1)" :key="image.id" class="result-image">
-          <h4>{{ index + 1 }}</h4>
-          <img :src="image.url" :alt="image.id" />
+      <div v-if="responseImages.length > 0" class="response-image-container">
+        <h2>Este es tu doppelgänger famoso:</h2>
+        <div class="response-image-wrapper">
+          <img v-if="responseImages[0].url" :src="responseImages[0].url" :alt="responseImages[0].id" class="response-image" />
         </div>
+        <p>{{responseImages[0].url}}</p>
+      </div>
+    </div>
+    <div class="input-container" v-if="uploadedImage">
+      <button @click="submitImage" class="custom-file-button">¡Descubre tu doppelgänger!</button>
+    </div>
+
+    <div v-if="responseImages.length > 1" class="result-images-container">
+      <h3>Aquí hay más opciones:</h3>
+      <div v-for="(image, index) in responseImages.slice(1)" :key="image.id" class="result-image">
+        <h4>{{ index + 1 }}</h4>
+        <img :src="image.url" :alt="image.id" />
       </div>
     </div>
   </div>
