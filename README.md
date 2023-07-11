@@ -209,7 +209,7 @@ De la librería Faiss, aprovechamos el índice HNSW (Hierarchical Navigable Smal
 Cada nodo está conectado con otros nodos cercanos en el espacio, de tal manera que los vecinos más cercanos están conectados de manera directa, para que se forme un "small world". Así podemos acceder de manera rápida a los vecinos cercanos.
 
 <div align="center">
- <img src="frontend/src/assets/hnsw.jpg" alt="Image" />
+ <img src="frontend/src/assets/hsnw.jpg" alt="Image" />
 </div>
 
 Primero, construimos el indice con 128 dimensiones. En caso ese indice ya exista, lo borramos y lo creamos de nuevo.
