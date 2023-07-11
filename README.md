@@ -7,6 +7,13 @@
 * Sofía García Quintana (202110567)
 
 ## Descripción del producto  
+Nuestro producto es de un sistema de búsqueda y recuperación de datos multimedia con un enfoque en la búsqueda de imágenes, comparando muchos índices y su eficiencia. 
+Permitirá a los usuarios poder subir una foto propia o cualquiera, y poder obtener las fotos más similares a la enviada 
+El programa utiliza algoritmos de búsqueda para asegurar que los resultados sean los más precisos, eficientes en un corto tiempo. Para esto se utilizan índices y algoritmos multidimensionales 
+Permitirá al usuario descubrir imágenes similares a través de sus características 
+Finalmente, se programa está diseñado para soportar grandes volúmenes de datos 
+
+Nos enfocamos en la eficiencia y precisión de los resultados utilizando los índices multidimensionales 
 ## Dataset  
 Para la construcción de nuestra página, utilizamos la colección de referencia pública 'Labeled Faces in the Wild' de la Universidad de Massachusetts Amherstdataset para la verificación facial, también conocida como coincidencia de pares. Esta consiste en una colección de carpetas identificadas por el nombre de personas, cuyo contenido son imágenes (o imagen) de la misma. La estructura es la siguiente:  
 
@@ -181,6 +188,20 @@ Manteniendo un valor de K = 8
 <div align="center">
  <img src="frontend/src/assets/grafico1.png" alt="Image" />
 </div>
+
+
+### Análisis de resultados
+
+KNN-Secuencial: el tiempo de ejecución aumenta poco a poco a medida que aumenta N, pues algoritmo hace una búsqueda secuencial en todo el conjunto de datos, lo que se vuelve mucho más costoso a medida que aumenta el tamaño de los datos.
+
+KNN-RTree: para N pequeños, el tiempo de ejecución es mayor. A medida que el tamaño del conjunto de datos aumenta, el tiempo de ejecución disminuye significativamente, pues el R-Tree indexa los datos para realizar búsquedas más rápidas a medida que el conjunto de datos se vuelve más grande.
+
+KNN-HighD: tiene un tiempo de ejecución muy bajo para conjuntos de datos pequeños, pero a medida que el tamaño del conjunto de datos aumenta, el tiempo de ejecución también aumenta. A medida que el tamaño del conjunto de datos aumenta, es posible que el algoritmo tenga dificultades para manejar la alta dimensionalidad y su rendimiento se ve afectado.
+
+KNN-Faiss: muestra el tiempo de ejecución más bajo en comparación con los otros algoritmos para todos los tamaños de conjunto de datos. Faiss es una biblioteca de búsqueda de vectores de alta eficiencia y está especialmente diseñada para conjuntos de datos grandes y de alta dimensionalidad, lo que permite realizar búsquedas KNN de manera rápida y eficiente.
+
+### Búsqueda por rango
+
 Para la búsqueda por rango, los resultados con los tres radios diferentes fueron los siguientes:  
 
 | N size   | R=0.709143053656 | R=0.6196988489  | R=0.53025464414|
@@ -194,6 +215,9 @@ Para la búsqueda por rango, los resultados con los tres radios diferentes fuero
 | N=6400   | 21.13604         | 18.03303        | 17.24171       |
 | N=12800  | 37.28199         | 35.25496        | 35.14004       |
 
+<div align="center">
+ <img src="frontend/src/assets/grafico2.png" alt="Image" />
+</div>
 
 ## KNN-RTree
 
@@ -224,3 +248,6 @@ def knn_rtree(faces_encoding, dataset, k, n):
     return [formateoPath(dataset[i][0], path) for i in results[:k]]
 
 ```
+
+## Conclusiones
+Los resultados muestran que el rendimiento de los algoritmos KNN varía según el tamaño del conjunto de datos y las características de los datos. Algunos algoritmos son más eficientes en conjuntos de datos grandes, mientras que otros pueden ser más adecuados para conjuntos de datos de alta dimensionalidad.
