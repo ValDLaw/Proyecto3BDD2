@@ -7,10 +7,10 @@
       </div>
       <nav>
         <ul class="nav-list">
-          <li :class="{ active: $route.name === 'SequentialQueueView' }"><router-link :to="{ name: 'SequentialQueueView' }">Sequential Queue</router-link></li>
-          <li :class="{ active: $route.name === 'SequentialRangeView' }"><router-link :to="{ name: 'SequentialRangeView' }">Sequential Range</router-link></li>
+          <li :class="{ active: $route.name === 'SequentialView' }"><router-link :to="{ name: 'SequentialView' }">Sequential</router-link></li>
+          <li :class="{ active: $route.name === 'FaissView' }"><router-link :to="{ name: 'FaissView' }">Faiss</router-link></li>
           <li :class="{ active: $route.name === 'RTreeView' }"><router-link :to="{ name: 'RTreeView' }">R-Tree</router-link></li>
-          <li :class="{ active: $route.name === 'HighDView' }"><router-link :to="{ name: 'HighDView' }">High-Dimensional</router-link></li>
+          <li :class="{ active: $route.name === 'KDTreeView' }"><router-link :to="{ name: 'KDTreeView' }">KD-Tree</router-link></li>
         </ul>
       </nav>
     </header>
@@ -127,6 +127,7 @@ h3, h4, h5, h6 {
 }
 
 .custom-file-button {
+  margin:20px;
   background-color: var(--secondary-color);
   color: var(--accent-color); /* Use accent color for button text */
   padding: 10px 20px;
@@ -186,17 +187,65 @@ h3, h4, h5, h6 {
 }
 
 .image-container {
-  height: 300px;
-  overflow: hidden;
+  width: 80%;
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Dos columnas de igual tamaño */
+  column-gap: 20px; /* Espacio entre las columnas */
+  margin: 20px;
+}
+
+.uploaded-image-container,
+.response-image-container {
   display: flex;
-  justify-content: center;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 15px;
+  margin-bottom: 10px;
+}
+
+.response-image-wrapper,
+.uploaded-image-wrapper {
+  height: 250px; /* Altura fija */
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0; /* Inicialmente oculto */
+  animation: imageAppear 0.5s ease-in-out forwards; /* Animación de aparición */
+}
+
+@keyframes imageAppear {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px); /* Desplazamiento hacia arriba */
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.response-image-container h3 {
+  margin-top: 0;
+}
+
+.response-image {
+  height: 100%;
 }
 
 .uploaded-image {
   height: 100%;
+}
+
+.result-images-container {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.result-image {
+  flex-basis: 20%;
+  text-align: center;
+  margin-bottom: 15px;
 }
 
 .loading-screen {

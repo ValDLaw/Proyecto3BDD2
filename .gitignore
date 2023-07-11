@@ -1,6 +1,7 @@
 images
 lfw
 venv
+uploads
 virtualenv
 
 .DS_Store

@@ -1,9 +1,9 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import MenuView from '@/views/MenuView.vue';
-import SequentialQueueView from '@/views/ApiView'
-import SequentialRangeView from '@/views/ApiView'
-import RTreeView from '@/views/ApiView'
-import HighDView from '@/views/ApiView'
+import FaissView from '@/views/FaissView'
+import SequentialView from '@/views/SequentialView'
+import RTreeView from '@/views/RTreeView'
+import KDTreeView from '@/views/KDTreeView'
 
 const routes = [
     {
@@ -12,14 +12,14 @@ const routes = [
         component: MenuView
     },
     {
-      path: '/sequential_queue',
-      name: 'SequentialQueueView',
-      component: SequentialQueueView
+      path: '/sequential',
+      name: 'SequentialView',
+      component: SequentialView
     },
     {
-      path: '/sequential_range',
-      name: 'SequentialRangeView',
-      component: SequentialRangeView
+      path: '/faiss',
+      name: 'FaissView',
+      component: FaissView
     },
     {
       path: '/rtree',
@@ -27,9 +27,9 @@ const routes = [
       component: RTreeView
     },
     {
-      path: '/highd',
-      name: 'HighDView',
-      component: HighDView
+      path: '/kdtree',
+      name: 'KDTreeView',
+      component: KDTreeView
     }
   ];
   
