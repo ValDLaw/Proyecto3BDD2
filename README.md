@@ -31,7 +31,11 @@ Para la construcción de nuestra página, utilizamos la colección de referencia
 └── Zydrunas_Ilgauskas/
 ```
 ## Extracción de características  
-Para la extracción de características, utilizamos principalmente dos funciones de la librería **Face Recognition**: *face_encodings* y *load_image_file*. Hallamos el vector característico de tamaño 128 de cada imagen del datasetsPara no realizar el proeso de cálculo del vector caracteri
+Para la extracción de características, utilizamos principalmente dos funciones de la librería **Face Recognition**: *face_encodings* y *load_image_file*. Hallamos el vector característico de tamaño 128 de cada imagen del dataset. Para no realizar el dicho proceso reiteradamente, vamos a guardar el vector característico de cada imagen en un json, con el siguiente formato:  
+
+> {"../images/German_Khan/German_Khan_0001.jpg": [-0.04473418742418289, 0.16433686017990112, ...], ...}
+
+Para ello, usamos el siguiente código:  
 
 ```python
 images_directory = os.path.join(os.path.dirname(__file__), "../images")
