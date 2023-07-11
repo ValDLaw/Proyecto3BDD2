@@ -50,7 +50,25 @@ images_directory = os.path.join(os.path.dirname(__file__), "../images")
 
 
 ### Using Priority Queue
+Para la implementación de este algoritmo, nos basamos en el siguiente pseudocódigo:  
+<div align="center">
+ <img src="frontend/src/assets/knn.png" alt="Image" />
+</div>  
 
+Para hacerlo más eficiente, lo adaptamos para usar una cola de prioridad, teniendo siempre como elemento de mayor prioridad a aquella imagen cuya distancia es menor. Es así que evitamos hace un sort al arreglo result, sino que ya tenemos al heap en orden. Así quedó nuestra implementación.  
+
+```python
+def knn_pq(faces_encoding, dataset, k):
+    result = []
+    for path, matrix_vector_faces in dataset:
+        for distance in face_recognition.face_distance(matrix_vector_faces, faces_encoding):
+            #result.append((os.path.basename(path), distance))
+            pq.heappush(result, (distance, formateoPath(path, ERES_VALERIA)))
+
+    resultK = pq.nsmallest(k , result)
+
+    return [formateoPath(path, ERES_VALERIA) for distance, path in resultK]
+```
 
 ### Range Search  
 Para el análisis de la distribución de las distancias, empleamos la regla empírica, también conocida como la regla de los 68-95-99.7, la cual se basa en la distribución normal y establece que aproximadamente el 68% de los datos se encuentran dentro de una desviación estándar de la media, el 95% se encuentran dentro de dos desviaciones estándar y el 99.7% se encuentran dentro de tres desviaciones estándar. En base a ello calculamos el promedio y desviación estándar de todas las distancias, considerando la imagen en 'test/teofilo.png' como base.  
