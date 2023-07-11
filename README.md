@@ -13,7 +13,12 @@ El programa utiliza algoritmos de búsqueda para asegurar que los resultados sea
 Permitirá al usuario descubrir imágenes similares a través de sus características 
 Finalmente, se programa está diseñado para soportar grandes volúmenes de datos 
 
-Nos enfocamos en la eficiencia y precisión de los resultados utilizando los índices multidimensionales 
+Nos enfocamos en la eficiencia y precisión de los resultados utilizando los índices multidimensionales.  
+
+<div align="center">
+ <img src="frontend/src/assets/pagina.png" alt="Image" />
+</div>  
+
 ## Dataset  
 Para la construcción de nuestra página, utilizamos la colección de referencia pública 'Labeled Faces in the Wild' de la Universidad de Massachusetts Amherstdataset para la verificación facial, también conocida como coincidencia de pares. Esta consiste en una colección de carpetas identificadas por el nombre de personas, cuyo contenido son imágenes (o imagen) de la misma. La estructura es la siguiente:  
 
@@ -26,7 +31,11 @@ Para la construcción de nuestra página, utilizamos la colección de referencia
 └── Zydrunas_Ilgauskas/
 ```
 ## Extracción de características  
-Para la extracción de características, utilizamos principalmente dos funciones de la librería **Face Recognition**: *face_encodings* y *load_image_file*. Hallamos el vector característico de tamaño 128 de cada imagen del datasetsPara no realizar el proeso de cálculo del vector caracteri
+Para la extracción de características, utilizamos principalmente dos funciones de la librería **Face Recognition**: *face_encodings* y *load_image_file*. Hallamos el vector característico de tamaño 128 de cada imagen del dataset. Para no realizar el dicho proceso reiteradamente, vamos a guardar el vector característico de cada imagen en un json, con el siguiente formato:  
+
+> {"../images/German_Khan/German_Khan_0001.jpg": [-0.04473418742418289, 0.16433686017990112, ...], ...}
+
+Para ello, usamos el siguiente código:  
 
 ```python
 images_directory = os.path.join(os.path.dirname(__file__), "../images")
@@ -50,7 +59,25 @@ images_directory = os.path.join(os.path.dirname(__file__), "../images")
 
 
 ### Using Priority Queue
+Para la implementación de este algoritmo, nos basamos en el siguiente pseudocódigo:  
+<div align="center">
+ <img src="frontend/src/assets/knn.png" alt="Image" />
+</div>  
 
+Para hacerlo más eficiente, lo adaptamos para usar una cola de prioridad, teniendo siempre como elemento de mayor prioridad a aquella imagen cuya distancia es menor. Es así que evitamos hace un sort al arreglo result, sino que ya tenemos al heap en orden. Así quedó nuestra implementación.  
+
+```python
+def knn_pq(faces_encoding, dataset, k):
+    result = []
+    for path, matrix_vector_faces in dataset:
+        for distance in face_recognition.face_distance(matrix_vector_faces, faces_encoding):
+            #result.append((os.path.basename(path), distance))
+            pq.heappush(result, (distance, formateoPath(path, ERES_VALERIA)))
+
+    resultK = pq.nsmallest(k , result)
+
+    return [formateoPath(path, ERES_VALERIA) for distance, path in resultK]
+```
 
 ### Range Search  
 Para el análisis de la distribución de las distancias, empleamos la regla empírica, también conocida como la regla de los 68-95-99.7, la cual se basa en la distribución normal y establece que aproximadamente el 68% de los datos se encuentran dentro de una desviación estándar de la media, el 95% se encuentran dentro de dos desviaciones estándar y el 99.7% se encuentran dentro de tres desviaciones estándar. En base a ello calculamos el promedio y desviación estándar de todas las distancias, considerando la imagen en 'test/teofilo.png' como base.  

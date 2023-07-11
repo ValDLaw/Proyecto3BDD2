@@ -3,7 +3,6 @@ lfw
 venv
 uploads
 virtualenv
-
 .DS_Store
 node_modules
 /dist
