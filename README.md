@@ -13,7 +13,12 @@ El programa utiliza algoritmos de búsqueda para asegurar que los resultados sea
 Permitirá al usuario descubrir imágenes similares a través de sus características 
 Finalmente, se programa está diseñado para soportar grandes volúmenes de datos 
 
-Nos enfocamos en la eficiencia y precisión de los resultados utilizando los índices multidimensionales 
+Nos enfocamos en la eficiencia y precisión de los resultados utilizando los índices multidimensionales.  
+
+<div align="center">
+ <img src="frontend/src/assets/pagina.png" alt="Image" />
+</div>  
+
 ## Dataset  
 Para la construcción de nuestra página, utilizamos la colección de referencia pública 'Labeled Faces in the Wild' de la Universidad de Massachusetts Amherstdataset para la verificación facial, también conocida como coincidencia de pares. Esta consiste en una colección de carpetas identificadas por el nombre de personas, cuyo contenido son imágenes (o imagen) de la misma. La estructura es la siguiente:  
 
