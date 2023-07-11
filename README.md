@@ -1,4 +1,5 @@
-# PROYECTO 3 : Base de Datos Multimedia  
+# Proyecto 3 - Bases de Datos II
+
 ### Integrantes
 * Valeria Espinoza Tarazona (202110109)
 * Enzo Camizán Vidal (202110047)
@@ -8,18 +9,17 @@
 
 ## Descripción del producto  
 Nuestro producto es de un sistema de búsqueda y recuperación de datos multimedia con un enfoque en la búsqueda de imágenes, comparando muchos índices y su eficiencia. 
-Permitirá a los usuarios poder subir una foto propia o cualquiera, y poder obtener las fotos más similares a la enviada 
-El programa utiliza algoritmos de búsqueda para asegurar que los resultados sean los más precisos, eficientes en un corto tiempo. Para esto se utilizan índices y algoritmos multidimensionales 
-Permitirá al usuario descubrir imágenes similares a través de sus características 
-Finalmente, se programa está diseñado para soportar grandes volúmenes de datos 
+Permitirá a los usuarios poder subir una foto propia o cualquiera, y poder obtener las fotos más similares a la enviada dentro de un dataset de fotos de famosos.
+El objetivo será permitir al usuario descubrir imágenes similares a través de sus características.
+Finalmente, vale mencionar que el programa está diseñado para soportar grandes volúmenes de datos.
 
-Nos enfocamos en la eficiencia y precisión de los resultados utilizando los índices multidimensionales.  
+El programa utiliza los algoritmos de búsqueda KNN-Secuencial y KNN-RTree para asegurar que los resultados sean los más precisos, eficientes en un corto tiempo Adicionalmente, nos enfocamos en la eficiencia y precisión de los resultados utilizando los índices multidimensionales del tipo High-D: el KNN-KDTree y el KNN-Faiss.  
 
 <div align="center">
  <img src="frontend/src/assets/pagina.png" alt="Image" />
 </div>  
 
-## Dataset  
+## Descripción del dominio de datos  
 Para la construcción de nuestra página, utilizamos la colección de referencia pública 'Labeled Faces in the Wild' de la Universidad de Massachusetts Amherstdataset para la verificación facial, también conocida como coincidencia de pares. Esta consiste en una colección de carpetas identificadas por el nombre de personas, cuyo contenido son imágenes (o imagen) de la misma. La estructura es la siguiente:  
 
 ```bash
@@ -54,7 +54,7 @@ images_directory = os.path.join(os.path.dirname(__file__), "../images")
 
 
 
-### Using Priority Queue
+### Usando Priority Queue
 Para la implementación de este algoritmo, nos basamos en el siguiente pseudocódigo:  
 <div align="center">
  <img src="frontend/src/assets/knn.png" alt="Image" />
@@ -128,120 +128,6 @@ def range_search(faces_encoding, dataset, radio):
         return [path for path, dis in result]
 ```
 
-
-## KNN-HighD
-###  KD Tree
-
-Una estructura de datos muy útil para una búsqueda que involucran una clave de búsqueda multidimensional, como la búsqueda de rangos o de los vecinos más cercanos.
-Es recomendado no usar altas dimensiones porque hace que el algoritmo visite muchas más ramas que en espacio de menor dimensionalidad
-
-
-```python
-    def FaissIndex_Search(query, dataset, k, n):
-        q = np.reshape(np.array(query,dtype='f'), (1,128))
-        ind = faiss.read_index("./knn/faiss/faiss_feat_vector_"+str(n)+".idx")
-        n, indx = ind.search(q, k=k)
-        indx = indx[0].astype(int)
-        results = []
-        for i in indx:
-            pathToSave = formateoPath(dataset[i][0], path)
-            results.append(pathToSave)
-            return results
-```
-
-
-
-
-### Faiss (HNSW)
-
-Faiss es una librería de búsqueda de similitud que destaca por el uso de memoria y rápido procesamiento de datos
-Muy útil para aplicaciones que requieren búsquedas rápidas con muchos datos
-
-```python
-def FaissIndex_Search(query, dataset, k, n):
-    q = np.reshape(np.array(query,dtype='f'), (1,128))
-    ind = faiss.read_index("./knn/faiss/faiss_feat_vector_"+str(n)+".idx")
-    n, indx = ind.search(q, k=k)
-    indx = indx[0].astype(int)
-    results = []
-    for i in indx: #Considerar que pasa si subes una foto de alguien que ya esta en la bd
-        pathToSave = formateoPath(dataset[i][0], ERES_VALERIA)
-        results.append(pathToSave)
-    return results
-
-```
-
-### Maldición de la dimensionalidad
-La maldición de la dimensionalidad tiene un gran impacto en las técnicas de búsqueda o de aprendizaje. 
-Ocurre cuando la distancia media entre los datos aumentan con el número de dimensiones
-
-Y esto se puede ver mejor con el siguiente ejemplo:
-Se escogen 100 puntos para 1 dimensión, y se puede apreciar que puntos están cerca y lejos
-
-<div align="center">
- <img src="frontend/src/assets/dimersion1.png" alt="Image" />
-</div>
-
-Y cuando comparamos para una dimensión mayor, ya no es tan fácil apreciar los puntos cercanos comparado con el de 1 dimensión
-
-<div align="center">
- <img src="frontend/src/assets/dimension2.png" alt="Image" />
-</div>
-
-Pero para evitar la maldición de la dimensionalidad, tenemos dos opciones, la muy obvia sería bajar la dimensionalidad, o tener muchos más datos para comparar
-
-
-
-## Experimentación  
-Manteniendo un valor de K = 8
-
-| N size   | KNN-SecuencialPQ | KNN-RTree   | KNN-HighD  | KNN-Faiss  |
-|----------|------------------|-------------|------------|------------|
-| N=100    | 0.78297          | 1.76716     | 0.28610    | 0.75793    |
-| N=200    | 1.46412          | 2.60305     | 2.19416    | 0.43607    |
-| N=400    | 3.54099          | 1.90997     | 0.98920    | 0.32902    |
-| N=800    | 6.77585          | 3.50595     | 0.90504    | 0.35405    |
-| N=1600   | 11.95478         | 7.05003     | 1.42908    | 0.45395    |
-| N=3200   | 21.57902         | 14.25099    | 2.79713    | 0.83518    |
-| N=6400   | 38.80596         | 27.48990    | 5.33104    | 1.63794    |
-| N=12800  | 77.79407         | 56.04196    | 10.74505   | 2.81882    |
-
-> Tiempo en milisegundos
-
-<div align="center">
- <img src="frontend/src/assets/grafico1.png" alt="Image" />
-</div>
-
-
-### Análisis de resultados
-
-KNN-Secuencial: el tiempo de ejecución aumenta poco a poco a medida que aumenta N, pues algoritmo hace una búsqueda secuencial en todo el conjunto de datos, lo que se vuelve mucho más costoso a medida que aumenta el tamaño de los datos.
-
-KNN-RTree: para N pequeños, el tiempo de ejecución es mayor. A medida que el tamaño del conjunto de datos aumenta, el tiempo de ejecución disminuye significativamente, pues el R-Tree indexa los datos para realizar búsquedas más rápidas a medida que el conjunto de datos se vuelve más grande.
-
-KNN-HighD: tiene un tiempo de ejecución muy bajo para conjuntos de datos pequeños, pero a medida que el tamaño del conjunto de datos aumenta, el tiempo de ejecución también aumenta. A medida que el tamaño del conjunto de datos aumenta, es posible que el algoritmo tenga dificultades para manejar la alta dimensionalidad y su rendimiento se ve afectado.
-
-KNN-Faiss: muestra el tiempo de ejecución más bajo en comparación con los otros algoritmos para todos los tamaños de conjunto de datos. Faiss es una biblioteca de búsqueda de vectores de alta eficiencia y está especialmente diseñada para conjuntos de datos grandes y de alta dimensionalidad, lo que permite realizar búsquedas KNN de manera rápida y eficiente.
-
-### Búsqueda por rango
-
-Para la búsqueda por rango, los resultados con los tres radios diferentes fueron los siguientes:  
-
-| N size   | R=0.709143053656 | R=0.6196988489  | R=0.53025464414|
-|----------|------------------|-----------------|----------------|
-| N=100    | 0.42200          | 0.31304         | 0.27704        |
-| N=200    | 0.81396          | 0.59199         | 0.54884        |
-| N=400    | 1.42288          | 1.13201         | 1.10388        |
-| N=800    | 3.34692          | 2.25901         | 2.16603        |
-| N=1600   | 6.34697          | 4.53401         | 4.22215        |
-| N=3200   | 13.4139          | 9.28187         | 8.44812        |
-| N=6400   | 21.13604         | 18.03303        | 17.24171       |
-| N=12800  | 37.28199         | 35.25496        | 35.14004       |
-
-<div align="center">
- <img src="frontend/src/assets/grafico2.png" alt="Image" />
-</div>
-
 ## KNN-RTree
 
 Un método de búsqueda que permite esencialmente clasificar valores buscando los puntos más cercanos o más similares. Además, es un índice multidimensional.
@@ -272,13 +158,142 @@ def knn_rtree(faces_encoding, dataset, k, n):
 
 ```
 
+
+## KNN-HighD
+###  KD Tree
+
+Una estructura de datos muy útil para una búsqueda que involucran una clave de búsqueda multidimensional, como la búsqueda de rangos o de los vecinos más cercanos.
+Es recomendado no usar altas dimensiones porque hace que el algoritmo visite muchas más ramas que en espacio de menor dimensionalidad
+
+
+```python
+def FaissIndex_Search(query, dataset, k, n):
+    q = np.reshape(np.array(query,dtype='f'), (1,128))
+    ind = faiss.read_index("./knn/faiss/faiss_feat_vector_"+str(n)+".idx")
+    n, indx = ind.search(q, k=k)
+    indx = indx[0].astype(int)
+    results = []
+    for i in indx:
+        pathToSave = formateoPath(dataset[i][0], path)
+        results.append(pathToSave)
+        return results
+```
+
+
+
+
+### Faiss (HNSW)
+
+Faiss es una librería de búsqueda de similitud que destaca por el uso de memoria y rápido procesamiento de datos
+Muy útil para aplicaciones que requieren búsquedas rápidas con muchos datos
+
+```python
+def FaissIndex_Search(query, dataset, k, n):
+    q = np.reshape(np.array(query,dtype='f'), (1,128))
+    ind = faiss.read_index("./knn/faiss/faiss_feat_vector_"+str(n)+".idx")
+    n, indx = ind.search(q, k=k)
+    indx = indx[0].astype(int)
+    results = []
+    for i in indx: #Considerar que pasa si subes una foto de alguien que ya esta en la bd
+        pathToSave = formateoPath(dataset[i][0], ERES_VALERIA)
+        results.append(pathToSave)
+    return results
+
+```
+
+### Maldición de la dimensionalidad
+La maldición de la dimensionalidad tiene un gran impacto en las técnicas de búsqueda o de aprendizaje. 
+Ocurre cuando la distancia media entre los datos aumentan con el número de dimensiones.
+
+Esto se evidencia mejor con el siguiente ejemplo:
+Se escogen 100 puntos para 1 dimensión, y se puede apreciar cuáles puntos están cerca y cuáles lejos:
+
+<div align="center">
+ <img src="frontend/src/assets/dimersion1.png" alt="Image" />
+</div>
+
+Y cuando comparamos para una dimensión mayor, ya no es tan fácil apreciar los puntos cercanos comparado con el de una dimensión:
+
+<div align="center">
+ <img src="frontend/src/assets/dimension2.png" alt="Image" />
+</div>
+
+**Solución**
+Para evitar la maldición de la dimensionalidad, tenemos dos opciones. La más obvia sería reducir la dimensionalidad, o en otro caso, aumentar el tamaño del dataset utilizado para comparar las imágenes.
+
+
+## Experimentación  
+Manteniendo un valor de K = 8, realizamos una serie de experimentos para distintos tamaños del dataset. Probamos y medimos los tiempos para cada índice implementado y lo mostramos en la tabla a continuación:
+
+| N size   | KNN-Secuencial | KNN-RTree   | KNN-KDTree  | KNN-Faiss  |
+|----------|------------------|-------------|------------|------------|
+| N=100    | 0.78297          | 1.76716     | 0.28610    | 0.75793    |
+| N=200    | 1.46412          | 2.60305     | 2.19416    | 0.43607    |
+| N=400    | 3.54099          | 1.90997     | 0.98920    | 0.32902    |
+| N=800    | 6.77585          | 3.50595     | 0.90504    | 0.35405    |
+| N=1600   | 11.95478         | 7.05003     | 1.42908    | 0.45395    |
+| N=3200   | 21.57902         | 14.25099    | 2.79713    | 0.83518    |
+| N=6400   | 38.80596         | 27.48990    | 5.33104    | 1.63794    |
+| N=12800  | 77.79407         | 56.04196    | 10.74505   | 2.81882    |
+
+> Tiempo en milisegundos
+
+<div align="center">
+ <img src="frontend/src/assets/grafico1.png" alt="Image" />
+</div>
+
+
+### Análisis de resultados
+
+**KNN-Secuencial:** El tiempo de ejecución aumenta poco a poco a medida que aumenta N, pues algoritmo hace una búsqueda secuencial en todo el conjunto de datos, lo que se vuelve mucho más costoso a medida que aumenta el tamaño de los datos.
+
+**KNN-RTree:** Para N pequeños, el tiempo de ejecución es mayor. A medida que el tamaño del conjunto de datos aumenta, el tiempo de ejecución disminuye significativamente, pues el R-Tree indexa los datos para realizar búsquedas más rápidas a medida que el conjunto de datos se vuelve más grande.
+
+**KNN-KDTree:** Tiene un tiempo de ejecución muy bajo para conjuntos de datos pequeños, pero a medida que el tamaño del conjunto de datos aumenta, el tiempo de ejecución también aumenta. A medida que el tamaño del conjunto de datos aumenta, es posible que el algoritmo tenga dificultades para manejar la alta dimensionalidad y su rendimiento se ve afectado.
+
+**KNN-Faiss:** Muestra el tiempo de ejecución más bajo en comparación con los otros algoritmos para todos los tamaños de conjunto de datos. Faiss es una biblioteca de búsqueda de vectores de alta eficiencia y está especialmente diseñada para conjuntos de datos grandes y de alta dimensionalidad, lo que permite realizar búsquedas KNN de manera rápida y eficiente.
+
+### Búsqueda por rango
+
+Para la búsqueda por rango, realizamos nuevos experimentos con tres radios distintos. Los resultados con los tres radios fueron los siguientes:  
+
+| N size   | R=0.709143053656 | R=0.6196988489  | R=0.53025464414|
+|----------|------------------|-----------------|----------------|
+| N=100    | 0.42200          | 0.31304         | 0.27704        |
+| N=200    | 0.81396          | 0.59199         | 0.54884        |
+| N=400    | 1.42288          | 1.13201         | 1.10388        |
+| N=800    | 3.34692          | 2.25901         | 2.16603        |
+| N=1600   | 6.34697          | 4.53401         | 4.22215        |
+| N=3200   | 13.4139          | 9.28187         | 8.44812        |
+| N=6400   | 21.13604         | 18.03303        | 17.24171       |
+| N=12800  | 37.28199         | 35.25496        | 35.14004       |
+
+<div align="center">
+ <img src="frontend/src/assets/grafico2.png" alt="Image" />
+</div>
+
+## Frontend
+Para la interfaz de nuestro programa, implementamos una GUI usando el lenguaje de programación JavaScript con el framework de Vue. La conexión entre el backend y el frontend se realizó con apoyo de una API.
+
+### Desarrollo de la API
+La API desarrollada contó con un endpoint principal y 4 endpoints auxiliares que llamaron a cada una de las estructuras implementadas: KNN-Secuencial, KNN-RTree, KNN-KDTree y KNN-Faiss. Cada endpoint recibe un file (imagen) y un entero (k) que luego trabajará para devolver las k imágenes del dataset que más se parecen a la imagen enviada, según el índice trabajado.
+
+### Evidencias del frontend
+<div align="center">
+ <img src="frontend/src/assets/frontend1.png" alt="Image" />
+</div>
+
+<div align="center">
+ <img src="frontend/src/assets/frontend2.png" alt="Image" />
+</div>
+
 ## Conclusiones
 Los resultados muestran que el rendimiento de los algoritmos KNN varía según el tamaño del conjunto de datos y las características de los datos. Algunos algoritmos son más eficientes en conjuntos de datos grandes, mientras que otros pueden ser más adecuados para conjuntos de datos de alta dimensionalidad.
 
-Se pudo implementar una variedad de algoritmos optimizados e índices multidimensionales y se pudo comparar la eficiencia de cada uno y los recursos que utilizando, además de la precisión
+Se pudo implementar una variedad de algoritmos optimizados e índices multidimensionales y se pudo comparar la eficiencia de cada uno y los recursos que utilizando, además de la precisión.
 
-Poder tener una estabilidad y adaptabilidad del programa para manejar adecuadamente grandes volúmenes de datos
+Poder tener una estabilidad y adaptabilidad del programa para manejar adecuadamente grandes volúmenes de datos.
 
-Se puedo concluir que KNN-Faiss es un buen índice de búsqueda, por ser eficiente, y ser capaz retornar el resultado en poco tiempo comparados con los demás índices
+Se puedo concluir que KNN-Faiss es un buen índice de búsqueda, por ser eficiente, y ser capaz retornar el resultado en poco tiempo comparados con los demás índices.
 
-Se pudo observar que el KNN-SecuencialPQ es el menos eficiente comparado con los demás índices
+Se pudo observar que el KNN-Secuencial es el menos eficiente comparado con los demás índices.
