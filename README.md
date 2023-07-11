@@ -142,7 +142,25 @@ def FaissIndex_Search(query, dataset, k, n):
 ```
 
 ### Maldición de la dimensionalidad
-Incluir imágenes/diagramas para una mejor comprensión
+La maldición de la dimensionalidad tiene un gran impacto en las técnicas de búsqueda o de aprendizaje. 
+Ocurre cuando la distancia media entre los datos aumentan con el número de dimensiones
+
+Y esto se puede ver mejor con el siguiente ejemplo:
+Se escogen 100 puntos para 1 dimensión, y se puede apreciar que puntos están cerca y lejos
+
+<div align="center">
+ <img src="frontend/src/assets/dimersion1.png" alt="Image" />
+</div>
+
+Y cuando comparamos para una dimensión mayor, ya no es tan fácil apreciar los puntos cercanos comparado con el de 1 dimensión
+
+<div align="center">
+ <img src="frontend/src/assets/dimension2.png" alt="Image" />
+</div>
+
+Pero para evitar la maldición de la dimensionalidad, tenemos dos opciones, la muy obvia sería bajar la dimensionalidad, o tener muchos más datos para comparar
+
+
 
 ## Experimentación  
 Manteniendo un valor de K = 8
