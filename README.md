@@ -158,6 +158,11 @@ Manteniendo un valor de K = 8
 | N=6400   | 0.03880596       | 0.02748990  | 0.00533104 | 0.00163794 |
 | N=12800  | 0.07779407       | 0.05604196  | 0.01074505 | 0.00281882 |
 
+
+
+<div align="center">
+ <img src="frontend/src/assets/grafico1.png" alt="Image" />
+</div>
 Para la búsqueda por rango, los resultados con los tres radios diferentes fueron los siguientes:  
 
 | N size   | R=0.709143053656 | R=0.6196988489  | R=0.53025464414|
