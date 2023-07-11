@@ -3,6 +3,7 @@ import face_recognition
 import math
 import rtree
 from extraccion_de_caracteristicas import formateoPath
+import os 
 
 ERES_VALERIA = False
 
