@@ -185,13 +185,6 @@ h3, h4, h5, h6 {
   transform: translateY(-50%) rotate(45deg);
 }
 
-.container {
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  align-items: center;
-}
-
 .image-container {
   height: 300px;
   overflow: hidden;
