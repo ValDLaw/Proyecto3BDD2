@@ -72,11 +72,11 @@ def knn_pq(faces_encoding, dataset, k):
     for path, matrix_vector_faces in dataset:
         for distance in face_recognition.face_distance(matrix_vector_faces, faces_encoding):
             #result.append((os.path.basename(path), distance))
-            pq.heappush(result, (distance, formateoPath(path, ERES_VALERIA)))
+            pq.heappush(result, (distance, formateoPath(path)))
 
     resultK = pq.nsmallest(k , result)
 
-    return [formateoPath(path, ERES_VALERIA) for distance, path in resultK]
+    return [formateoPath(path) for distance, path in resultK]
 ```
 
 ### Range Search  
@@ -125,7 +125,7 @@ def range_search(faces_encoding, dataset, radio):
     for path, matrix_vector_faces in dataset:
         for distance in face_recognition.face_distance(matrix_vector_faces, faces_encoding):
             if distance < radio:
-                result.append(( formateoPath(path, ERES_VALERIA), distance))
+                result.append(( formateoPath(path), distance))
 
     if len(result):
         result = sorted(result, key = lambda x: x[1])
