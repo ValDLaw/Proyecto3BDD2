@@ -164,7 +164,7 @@ def knn_rtree(faces_encoding, dataset, k, n):
 
 
 ## KNN-HighD
-###  KD Tree
+###  KD-Tree
 
 Una estructura de datos muy útil para una búsqueda que involucran una clave de búsqueda multidimensional, como la búsqueda de rangos o de los vecinos más cercanos.
 Es recomendado no usar altas dimensiones porque hace que el algoritmo visite muchas más ramas y el espacio entre los puntos aumenta de manera exponencial, haciendo que haya mayor overlap entre distintas particiones.
