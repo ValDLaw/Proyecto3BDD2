@@ -12,9 +12,9 @@ from werkzeug.utils import secure_filename
 from PIL import Image
 
 from knn_secuencial import knn_pq
-from knn_rtree import knn_rtree
+from knn_rtree import knn_rtree, rtree_index
 from knn_kdtree import KDTree_index, KDTree_search
-from knn_faiss import FaissIndex_Search
+from knn_faiss import FaissIndex_Search, buildFaissIndex
 
 os.environ['UPLOAD_FOLDER'] = 'uploads/'
 
@@ -52,6 +52,8 @@ def upload_image_rtree():
     face_encodings = face_recognition.face_encodings(query_image)
     k = int(request.form['k'])
 
+    if not os.path.exists("./knn/rtree/rtree_feat_vector_"+str(N)+".dat"):
+        rtree_index(N, dataset)
     return knn_rtree(face_encodings, dataset, k, N)
 
 @app.route("/kdtree", methods=["POST"])
@@ -81,6 +83,9 @@ def upload_image_faiss():
     face_encodings = face_recognition.face_encodings(query_image)
     k = int(request.form['k'])
 
+    if not os.path.exists("./knn/faiss/faiss_feat_vector_"+str(N)+".idx"):
+        buildFaissIndex(N, dataset)
+        
     return FaissIndex_Search(face_encodings, dataset, k, N)
 
 @app.route("/")
