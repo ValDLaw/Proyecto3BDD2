@@ -188,6 +188,20 @@ Manteniendo un valor de K = 8
 <div align="center">
  <img src="frontend/src/assets/grafico1.png" alt="Image" />
 </div>
+
+
+### Análisis de resultados
+
+KNN-Secuencial: el tiempo de ejecución aumenta poco a poco a medida que aumenta N, pues algoritmo hace una búsqueda secuencial en todo el conjunto de datos, lo que se vuelve mucho más costoso a medida que aumenta el tamaño de los datos.
+
+KNN-RTree: para N pequeños, el tiempo de ejecución es mayor. A medida que el tamaño del conjunto de datos aumenta, el tiempo de ejecución disminuye significativamente, pues el R-Tree indexa los datos para realizar búsquedas más rápidas a medida que el conjunto de datos se vuelve más grande.
+
+KNN-HighD: tiene un tiempo de ejecución muy bajo para conjuntos de datos pequeños, pero a medida que el tamaño del conjunto de datos aumenta, el tiempo de ejecución también aumenta. A medida que el tamaño del conjunto de datos aumenta, es posible que el algoritmo tenga dificultades para manejar la alta dimensionalidad y su rendimiento se ve afectado.
+
+KNN-Faiss: muestra el tiempo de ejecución más bajo en comparación con los otros algoritmos para todos los tamaños de conjunto de datos. Faiss es una biblioteca de búsqueda de vectores de alta eficiencia y está especialmente diseñada para conjuntos de datos grandes y de alta dimensionalidad, lo que permite realizar búsquedas KNN de manera rápida y eficiente.
+
+### Búsqueda por rango
+
 Para la búsqueda por rango, los resultados con los tres radios diferentes fueron los siguientes:  
 
 | N size   | R=0.709143053656 | R=0.6196988489  | R=0.53025464414|
@@ -201,6 +215,9 @@ Para la búsqueda por rango, los resultados con los tres radios diferentes fuero
 | N=6400   | 21.13604         | 18.03303        | 17.24171       |
 | N=12800  | 37.28199         | 35.25496        | 35.14004       |
 
+<div align="center">
+ <img src="frontend/src/assets/grafico2.png" alt="Image" />
+</div>
 
 ## KNN-RTree
 
@@ -232,8 +249,8 @@ def knn_rtree(faces_encoding, dataset, k, n):
 
 ```
 
-
-# Conclusiones
+## Conclusiones
+Los resultados muestran que el rendimiento de los algoritmos KNN varía según el tamaño del conjunto de datos y las características de los datos. Algunos algoritmos son más eficientes en conjuntos de datos grandes, mientras que otros pueden ser más adecuados para conjuntos de datos de alta dimensionalidad.
 
 Se pudo implementar un variedad de algoritmos optimizados e indices multidimensionales y se pudo comparar la eficiencia de cada uno y los recursos que utilizand, ademas de la presicion
 
@@ -242,4 +259,3 @@ Poder tener una escabiliadad y adaptibilidad del programa para manejra adecuadam
 Se puedo concluir que KNN-Faiss es un buen indice de busqueda, por ser eficiente, y ser capaz retornar el resultado en poco tiempo comparados con los demas indices
 
 Se pudo observar que el KNN-SecuencialPQ es el menos eficiente comparado con los demas indices
-
