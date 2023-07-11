@@ -1,6 +1,7 @@
 import face_recognition
 import heapq as pq
 from extraccion_de_caracteristicas import formateoPath
+import numpy as np
 
 '''
 VALERIA:
@@ -55,7 +56,7 @@ def select_representative_radio(mean_distance, std_distance):
 
     return [r1, r2, r3]
 
-def distances(dataset):
+def distances(faces_encoding, dataset):
     vector_dist = []
     for path, matrix_vector_faces in dataset:
         for distance in face_recognition.face_distance(matrix_vector_faces, faces_encoding):

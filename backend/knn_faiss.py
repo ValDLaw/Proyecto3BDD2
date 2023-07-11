@@ -1,6 +1,7 @@
 import faiss
 from extraccion_de_caracteristicas import formateoPath
 import numpy as np
+import os
 
 ERES_VALERIA = False
 
