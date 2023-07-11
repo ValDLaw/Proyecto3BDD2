@@ -6,7 +6,9 @@
 * Valentín Quezada Amour (202120570)
 * Sofía García Quintana (202110567)
 
-## Descripción del producto  
+## Descripción del producto
+
+
 ## Dataset  
 Para la construcción de nuestra página, utilizamos la colección de referencia pública 'Labeled Faces in the Wild' de la Universidad de Massachusetts Amherstdataset para la verificación facial, también conocida como coincidencia de pares. Esta consiste en una colección de carpetas identificadas por el nombre de personas, cuyo contenido son imágenes (o imagen) de la misma. La estructura es la siguiente:  
 
@@ -39,13 +41,30 @@ images_directory = os.path.join(os.path.dirname(__file__), "../images")
 
 
 ## KNN-Secuencial
+
+
+
 ### Using Priority Queue
+
+```python
+def knn_pq(faces_encoding, dataset, k):
+    result = []
+    for path, matrix_vector_faces in dataset:
+        for distance in face_recognition.face_distance(matrix_vector_faces, faces_encoding):
+            #result.append((os.path.basename(path), distance))
+            pq.heappush(result, (distance, formateoPath(path, ERES_VALERIA)))
+
+    resultK = pq.nsmallest(k , result)
+
+    return [formateoPath(path, ERES_VALERIA) for distance, path in resultK]
+```
 
 
 ### Range Search  
 Para el análisis de la distribución de las distancias, empleamos la regla empírica, también conocida como la regla de los 68-95-99.7, la cual se basa en la distribución normal y establece que aproximadamente el 68% de los datos se encuentran dentro de una desviación estándar de la media, el 95% se encuentran dentro de dos desviaciones estándar y el 99.7% se encuentran dentro de tres desviaciones estándar. En base a ello calculamos el promedio y desviación estándar de todas las distancias, considerando la imagen en 'test/teofilo.png' como base.  
 
-** Calculamos la media y la desviación estándar **  
+**Calculamos la media y la desviación estándar**
+
 ```python
 def distances(dataset):
     vector_dist = []
@@ -57,7 +76,8 @@ def distances(dataset):
     return list((np.mean(vector_dist), np.std(vector_dist)))
 ```
 
-** Calculamos los tres radios **
+**Calculamos los tres radios**
+
 ```python
 def select_representative_radii(mean_distance, std_distance):
     # regla empírica
@@ -74,6 +94,47 @@ Obtuvimos los siguientes tres radios:
 ```
 
 ## KNN-HighD
+###  KD Tree
+
+Una estructura de datos muy útil para una búsqueda que involucran una clave de búsqueda multidimensional, como la búsqueda de rangos o de los vecinos más cercanos.
+Es recomendado no usar altas dimensiones porque hace que el algoritmo visite muchas más ramas que en espacio de menor dimensionalidad
+
+
+```python
+    def FaissIndex_Search(query, dataset, k, n):
+        q = np.reshape(np.array(query,dtype='f'), (1,128))
+        ind = faiss.read_index("./knn/faiss/faiss_feat_vector_"+str(n)+".idx")
+        n, indx = ind.search(q, k=k)
+        indx = indx[0].astype(int)
+        results = []
+        for i in indx:
+            pathToSave = formateoPath(dataset[i][0], path)
+            results.append(pathToSave)
+            return results
+```
+
+
+
+
+### Faiss (HNSW)
+
+Faiss es una librería de búsqueda de similitud que destaca por el uso de memoria y rápido procesamiento de datos
+Muy útil para aplicaciones que requieren búsquedas rápidas con muchos datos
+
+```python
+def FaissIndex_Search(query, dataset, k, n):
+    q = np.reshape(np.array(query,dtype='f'), (1,128))
+    ind = faiss.read_index("./knn/faiss/faiss_feat_vector_"+str(n)+".idx")
+    n, indx = ind.search(q, k=k)
+    indx = indx[0].astype(int)
+    results = []
+    for i in indx: #Considerar que pasa si subes una foto de alguien que ya esta en la bd
+        pathToSave = formateoPath(dataset[i][0], ERES_VALERIA)
+        results.append(pathToSave)
+    return results
+
+```
+
 ### Maldición de la dimensionalidad
 Incluir imágenes/diagramas para una mejor comprensión
 
@@ -106,3 +167,31 @@ Para la búsqueda por rango, los resultados con los tres radios diferentes fuero
 
 
 ## KNN-RTree
+
+Un método de búsqueda que permite esencialmente clasificar valores buscando los puntos más cercanos o más similares. Además, es un índice multidimensional.
+Se destaca por la búsqueda de rango por ser muy similar al Btree.
+
+```python
+def knn_rtree(faces_encoding, dataset, k, n):
+    # Configurar las propiedades del índice R-tree
+    properties = rtree.index.Property()
+    properties.dimension = 128  # Tamaño del vector característico
+    properties.buffering_capacity = 8
+    # Crear el índice R-tree
+    idx = rtree.index.Index("./knn/rtree/rtree_feat_vector_"+str(n), properties=properties)
+
+    # Construir el índice si está vacío
+    if idx.get_size() < 1:
+        c = 0
+        for path, matrix_vector_faces in dataset:
+            q = tuple(matrix_vector_faces)
+            idx.insert(c, q)
+            c+=1
+
+    # Realizar la consulta kNN
+    query = tuple(faces_encoding[0])
+    results = list(idx.nearest(coordinates=query, num_results=k))
+    # Obtener las rutas de los resultados
+    return [formateoPath(dataset[i][0], path) for i in results[:k]]
+
+```
