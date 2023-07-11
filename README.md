@@ -269,3 +269,11 @@ def knn_rtree(faces_encoding, dataset, k, n):
 
 ## Conclusiones
 Los resultados muestran que el rendimiento de los algoritmos KNN varía según el tamaño del conjunto de datos y las características de los datos. Algunos algoritmos son más eficientes en conjuntos de datos grandes, mientras que otros pueden ser más adecuados para conjuntos de datos de alta dimensionalidad.
+
+Se pudo implementar una variedad de algoritmos optimizados e índices multidimensionales y se pudo comparar la eficiencia de cada uno y los recursos que utilizando, además de la precisión
+
+Poder tener una estabilidad y adaptabilidad del programa para manejar adecuadamente grandes volúmenes de datos
+
+Se puedo concluir que KNN-Faiss es un buen índice de búsqueda, por ser eficiente, y ser capaz retornar el resultado en poco tiempo comparados con los demás índices
+
+Se pudo observar que el KNN-SecuencialPQ es el menos eficiente comparado con los demás índices
