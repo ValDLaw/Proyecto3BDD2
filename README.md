@@ -6,9 +6,7 @@
 * Valentín Quezada Amour (202120570)
 * Sofía García Quintana (202110567)
 
-## Descripción del producto
-
-
+## Descripción del producto  
 ## Dataset  
 Para la construcción de nuestra página, utilizamos la colección de referencia pública 'Labeled Faces in the Wild' de la Universidad de Massachusetts Amherstdataset para la verificación facial, también conocida como coincidencia de pares. Esta consiste en una colección de carpetas identificadas por el nombre de personas, cuyo contenido son imágenes (o imagen) de la misma. La estructura es la siguiente:  
 
@@ -46,19 +44,6 @@ images_directory = os.path.join(os.path.dirname(__file__), "../images")
 
 ### Using Priority Queue
 
-```python
-def knn_pq(faces_encoding, dataset, k):
-    result = []
-    for path, matrix_vector_faces in dataset:
-        for distance in face_recognition.face_distance(matrix_vector_faces, faces_encoding):
-            #result.append((os.path.basename(path), distance))
-            pq.heappush(result, (distance, formateoPath(path, ERES_VALERIA)))
-
-    resultK = pq.nsmallest(k , result)
-
-    return [formateoPath(path, ERES_VALERIA) for distance, path in resultK]
-```
-
 
 ### Range Search  
 Para el análisis de la distribución de las distancias, empleamos la regla empírica, también conocida como la regla de los 68-95-99.7, la cual se basa en la distribución normal y establece que aproximadamente el 68% de los datos se encuentran dentro de una desviación estándar de la media, el 95% se encuentran dentro de dos desviaciones estándar y el 99.7% se encuentran dentro de tres desviaciones estándar. En base a ello calculamos el promedio y desviación estándar de todas las distancias, considerando la imagen en 'test/teofilo.png' como base.  
@@ -91,7 +76,28 @@ def select_representative_radii(mean_distance, std_distance):
 Obtuvimos los siguientes tres radios:  
 ```python
 [0.7091430536563229, 0.6196988488962061, 0.5302546441360892]
+```  
+
+Para el algoritmo, tomamos como referencia el siguiente pseudogódigo:  
+
+<div align="center">
+ <img src="frontend/src/assets/range_search.png" alt="Image" />
+</div>
+
+Esta fue nuestra implementación:  
+```python
+def range_search(faces_encoding, dataset, radio):
+    result = []
+    for path, matrix_vector_faces in dataset:
+        for distance in face_recognition.face_distance(matrix_vector_faces, faces_encoding):
+            if distance < radio:
+                result.append(( formateoPath(path, ERES_VALERIA), distance))
+
+    if len(result):
+        result = sorted(result, key = lambda x: x[1])
+        return [path for path, dis in result]
 ```
+
 
 ## KNN-HighD
 ###  KD Tree
@@ -141,16 +147,16 @@ Incluir imágenes/diagramas para una mejor comprensión
 ## Experimentación  
 Manteniendo un valor de K = 8
 
-| N size   | KNN-SecuencialPQ | KNN-RTree   | KNN-HighD  |
-|----------|------------------|-------------|------------|
-| N=100    | 0.00078297       | 0.03930998  | Cell 3     |
-| N=200    | 0.00146412       | 0.07666993  | Cell 6     |
-| N=400    | 0.00354099       | 0.15550327  | Cell 6     |
-| N=800    | 0.00677585       | 0.39572525  | Cell 6     |
-| N=1600   | 0.01195478       | 0.80968094  | Cell 6     |
-| N=3200   | 0.02157902       | 1.80910420  | Cell 6     |
-| N=6400   | 0.03880596       | 3.98084021  | Cell 6     |
-| N=12800  | 0.07779407       | 8.69529390  | Cell 6     |
+| N size   | KNN-SecuencialPQ | KNN-RTree   | KNN-HighD  | KNN-Faiss  |
+|----------|------------------|-------------|------------|------------|
+| N=100    | 0.00078297       | 0.00176716  | 0.00028610 | 0.00075793 |
+| N=200    | 0.00146412       | 0.00260305  | 0.00219416 | 0.00043607 |
+| N=400    | 0.00354099       | 0.00190997  | 0.00098920 | 0.00032902 |
+| N=800    | 0.00677585       | 0.00350595  | 0.00090504 | 0.00035405 |
+| N=1600   | 0.01195478       | 0.00705003  | 0.00142908 | 0.00045395 |
+| N=3200   | 0.02157902       | 0.01425099  | 0.00279713 | 0.00083518 |
+| N=6400   | 0.03880596       | 0.02748990  | 0.00533104 | 0.00163794 |
+| N=12800  | 0.07779407       | 0.05604196  | 0.01074505 | 0.00281882 |
 
 Para la búsqueda por rango, los resultados con los tres radios diferentes fueron los siguientes:  
 

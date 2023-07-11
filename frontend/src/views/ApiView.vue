@@ -22,10 +22,22 @@
       </div>
       <button @click="submitImage" class="custom-file-button">¡Descúbre tu doppelgänger!</button>
     </div>
+
     <div v-if="responseImages.length > 0">
       <h2>Imágenes obtenidas:</h2>
-      <div v-for="image in responseImages" :key="image.id">
-        <img :src="image.url" :alt="image.id" />
+      <div class="image-container">
+        <!-- Muestra la primera imagen de forma especial -->
+        <div class="original-image-container">
+          <h3>Este es tu doppelgänger famoso!</h3>
+          <img :src="responseImages[0].url" :alt="responseImages[0].id" class="original-image" />
+        </div>
+        <p>Para ver más resultados, puedes mirar abajo.</p>
+      </div>
+      <div class="result-images-container">
+        <div v-for="(image, index) in responseImages.slice(1)" :key="image.id" class="result-image">
+          <h4>{{ index + 1 }}</h4>
+          <img :src="image.url" :alt="image.id" />
+        </div>
       </div>
     </div>
   </div>
@@ -54,38 +66,44 @@ export default {
     },
     
     submitImage() {
-      // Obtener el archivo de imagen
-      const file = this.uploadedImage;
+      this.loading = true; // Mostrar el indicador de carga
 
-      // Crear un objeto FormData para enviar el archivo
       const formData = new FormData();
-      formData.append('file', file);
-      formData.append('k', this.k)
+      formData.append('file', this.dataURLtoFile(this.uploadedImage, 'image.jpg')); // Convierte la imagen a un archivo
+      formData.append('k', this.k);
 
-      this.loading = true;
-
-      // Realizar la llamada a la API
-      fetch(`/api/upload-image`, {
-          method: 'POST',
-          body: formData
+      fetch('http://127.0.0.1:5000/sequential', {
+        method: 'POST',
+        body: formData
       })
       .then(response => response.json())
       .then(data => {
-        // Actualizar this.responseImages con las imágenes devueltas por la API
-        this.responseImages = data.images;
-        this.loading = false;
+        // Actualiza los resultados obtenidos
+        this.responseImages = data.map((path, index) => {
+          return {
+            id: index + 1,
+            url: path.substring(2)
+          };
+        })
+        this.loading = false; // Oculta el indicador de carga
+        console.log('Success:', this.responseImages);
       })
       .catch(error => {
-        console.error(error);
-        this.loading = false;
+        console.error('Error:', error);
+        this.loading = false; // Oculta el indicador de carga en caso de error
       });
+    },
 
-      // simulación de respuesta de la API
-      this.responseImages = [
-        { id: 1, url: "../images/A.jpg" },
-        { id: 2, url: "../images/P.jpg" },
-        { id: 3, url: "../images/Y.jpg" }
-      ];
+    dataURLtoFile(dataURL, filename) {
+      const arr = dataURL.split(',');
+      const mime = arr[0].match(/:(.*?);/)[1];
+      const bstr = atob(arr[1]);
+      let n = bstr.length;
+      const u8arr = new Uint8Array(n);
+      while (n--) {
+        u8arr[n] = bstr.charCodeAt(n);
+      }
+      return new File([u8arr], filename, { type: mime });
     }
   }
 };
