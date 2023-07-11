@@ -36,7 +36,7 @@
       <div v-if="responseImages.length > 1" class="result-images-container">
         <h3>Aquí hay más opciones:</h3>
         <div v-for="(image, index) in responseImages.slice(1)" :key="image.id" class="result-image">
-          <h4>{{ index + 1 }}</h4>
+          <h4>{{image.url.split('/')[2].replace(/_/g, ' ')}}</h4>
           <img :src="image.url" :alt="image.id" />
         </div>
       </div>
