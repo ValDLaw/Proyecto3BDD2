@@ -133,29 +133,74 @@ def range_search(faces_encoding, dataset, radio):
 ###  KD Tree
 
 Una estructura de datos muy útil para una búsqueda que involucran una clave de búsqueda multidimensional, como la búsqueda de rangos o de los vecinos más cercanos.
-Es recomendado no usar altas dimensiones porque hace que el algoritmo visite muchas más ramas que en espacio de menor dimensionalidad
+Es recomendado no usar altas dimensiones porque hace que el algoritmo visite muchas más ramas y el espacio entre los puntos aumenta de manera exponencial, haciendo que haya mayor overlap entre distintas particiones.
 
+La manera en la que lo implementamos fue aprovechando la libreria de scikit-learn que ya tenia implementada una estructura de KDTree.
+
+Construimos el indice de tal manera que lo adaptamos a como tenemos el dataset lleno de sets de (path, encodings).
 
 ```python
-    def FaissIndex_Search(query, dataset, k, n):
-        q = np.reshape(np.array(query,dtype='f'), (1,128))
-        ind = faiss.read_index("./knn/faiss/faiss_feat_vector_"+str(n)+".idx")
-        n, indx = ind.search(q, k=k)
-        indx = indx[0].astype(int)
-        results = []
-        for i in indx:
-            pathToSave = formateoPath(dataset[i][0], path)
-            results.append(pathToSave)
-            return results
+from sklearn.neighbors import KDTree
+
+def KDTree_index(dataset):
+    # 1- construccion del indice
+    lst = []
+    for path, matrix_vector_faces in dataset:
+        lst.append(matrix_vector_faces)
+    ind = KDTree(lst, leaf_size=2)
+    return ind
 ```
 
+Y despues en el search, en base al indice creado, haciamos la query de tal manera que recibieramos el path de los K elementos mas cercanos.
 
-
+```python
+def KDTree_search(faces_encoding, dataset, k, indKD):
+    results = []
+    result_dist, result_id = indKD.query(faces_encoding, k=k)
+    for id, dist in zip(result_id[0], result_dist[0]):
+        pathToSave = formateoPath(dataset[id][0])
+        results.append(pathToSave)
+    return results
+```
 
 ### Faiss (HNSW)
 
-Faiss es una librería de búsqueda de similitud que destaca por el uso de memoria y rápido procesamiento de datos
-Muy útil para aplicaciones que requieren búsquedas rápidas con muchos datos
+Faiss es una librería de búsqueda de similitud que destaca por el uso de memoria y rápido procesamiento de datos. Esta librería está implementada por un grupo de Research de Facebook, y por eso el nombre de Faiss viene de Facebook AI Similarity Search. La idea de esta librería es proporcionar índices ya implementados que agilicen y aceleren la búsqueda de vecinos cercanos para grandes cantidades de datos y en altas dimensionalidades.
+
+De la librería Faiss, aprovechamos el índice HNSW (Hierarchical Navigable Small Worlds). Este índice es de tipo grafo de proximidad en algoritmos de redes neuronales artificiales. En resumen, es un grafo en el que dos vértices están conectados en función de su proximidad (distancia), de tal manera que se crea una estructura jerárquica de grafos.
+
+Cada nodo está conectado con otros nodos cercanos en el espacio, de tal manera que los vecinos más cercanos están conectados de manera directa, para que se forme un "small world". Así podemos acceder de manera rápida a los vecinos cercanos.
+
+Primero, construimos el indice con 128 dimensiones. En caso ese indice ya exista, lo borramos y lo creamos de nuevo.
+
+```python
+def buildFaissIndex(n, dataset):
+    pathFolder = "./knn/faiss/"
+    if os.path.exists(pathFolder+"faiss_feat_vector_"+str(n)+".idx"):
+        os.remove(pathFolder+"faiss_feat_vector_"+str(n)+".idx") 
+    sample_dict = {}
+
+    for path, matrix_vector_faces in dataset:
+        sample_dict[formateoPath(path)]= matrix_vector_faces
+
+    vector = []
+    for key in sample_dict: 
+        vector.append(np.array(sample_dict[key], dtype='f'))
+    vector = np.array(vector, dtype='f')
+    M = 32
+    ef_search = 8
+    d = 128
+
+    ind  = faiss.IndexHNSWFlat(d,M)
+    ind.hnsw.efConstruction = 40
+    ind.hnsw.efSearch = ef_search
+
+    ind.add(vector)
+
+    faiss.write_index(ind, "./knn/faiss/faiss_feat_vector_"+str(n)+".idx")
+```
+
+Después, el search, necesita que el vector de la query se adapta a las dimensiones que pide faiss.
 
 ```python
 def FaissIndex_Search(query, dataset, k, n):
@@ -164,12 +209,12 @@ def FaissIndex_Search(query, dataset, k, n):
     n, indx = ind.search(q, k=k)
     indx = indx[0].astype(int)
     results = []
-    for i in indx: #Considerar que pasa si subes una foto de alguien que ya esta en la bd
-        pathToSave = formateoPath(dataset[i][0], ERES_VALERIA)
+    for i in indx:
+        pathToSave = formateoPath(dataset[i][0])
         results.append(pathToSave)
     return results
-
 ```
+
 
 ### Maldición de la dimensionalidad
 La maldición de la dimensionalidad tiene un gran impacto en las técnicas de búsqueda o de aprendizaje. 
