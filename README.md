@@ -208,6 +208,10 @@ De la librería Faiss, aprovechamos el índice HNSW (Hierarchical Navigable Smal
 
 Cada nodo está conectado con otros nodos cercanos en el espacio, de tal manera que los vecinos más cercanos están conectados de manera directa, para que se forme un "small world". Así podemos acceder de manera rápida a los vecinos cercanos.
 
+<div align="center">
+ <img src="frontend/src/assets/hnsw.jpg" alt="Image" />
+</div>
+
 Primero, construimos el indice con 128 dimensiones. En caso ese indice ya exista, lo borramos y lo creamos de nuevo.
 
 ```python
@@ -270,9 +274,18 @@ Y cuando comparamos para una dimensión mayor, ya no es tan fácil apreciar los 
  <img src="frontend/src/assets/dimension2.png" alt="Image" />
 </div>
 
-**Solución**
-Para evitar la maldición de la dimensionalidad, tenemos dos opciones. La más obvia sería reducir la dimensionalidad, o en otro caso, aumentar el tamaño del dataset utilizado para comparar las imágenes.
+Entonces, si bien el uso de múltiples variables puede mejorar la predicción en modelos, siempre se debe asegurar que todas las variables (dimensiones) que se usan sean buena predictoras para el modelo que queremos.
 
+**Solución**
+
+Existen métodos de reducción de dimensionalidad para acelarar el entrenamiento de modelos y algoritmos. Entre ellos, están distintos métodos como la Transformada Discreta de Fourier o el Principal Component Analysis (PCA).
+
+En el caso del PCA, por ejemplo, logra proyectar los datos en un espacio de menor dimension que retiene la mayor parte de la variación entre los datos.
+
+
+<div align="center">
+ <img src="frontend/src/assets/pca.jpg" alt="Image" />
+</div>
 
 ## Experimentación  
 Manteniendo un valor de K = 8, realizamos una serie de experimentos para distintos tamaños del dataset. Probamos y medimos los tiempos para cada índice implementado y lo mostramos en la tabla a continuación:
