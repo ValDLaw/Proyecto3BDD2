@@ -359,7 +359,7 @@ python3 apiconsultas.py
 Posteriormente, en una nueva terminal localizada en tu carpeta `frontend`, ejecutarás lo siguiente:  
 
 ```bash
-np run serve
+npm run serve
 ```
 
 Finalmente, entrar al url mostrado en la terminal para empezar a hacer tus consultas subiendo imágenes locales.  
