@@ -348,6 +348,27 @@ La API desarrollada contó con un endpoint principal y 4 endpoints auxiliares qu
  <img src="frontend/src/assets/frontend2.png" alt="Image" />
 </div>
 
+### Ejecución de local
+
+Para poder correr el sistema en tu propia máquina, debes clonar este repositorio y crear una carpeta llamada `knn` dentro de la carpeta `backend`. Dentro de dicha carpeta deberáas crear dos carpetas: `faiss` y `rtree`. Luego, deberás correr el archivo `experiment.ipynb`, el cual te generará los índices en memoria secundaria. Una vez realizado ello, abrir una terminal y loalizarte en tu carpeta backend, donde ejecutarás lo siguiente:
+
+```bash
+python3 apiconsultas.py
+```
+
+Posteriormente, en una nueva terminal localizada en tu carpeta `frontend`, ejecutarás lo siguiente:  
+
+```bash
+np run serve
+```
+
+Finalmente, entrar al url mostrado en la terminal para empezar a hacer tus consultas subiendo imágenes locales.  
+
+## Organización del equipo  
+
+GitHub Project: https://github.com/users/ValDLaw/projects/5/views/1  
+
+
 ## Conclusiones
 Los resultados muestran que el rendimiento de los algoritmos KNN varía según el tamaño del conjunto de datos y las características de los datos. Algunos algoritmos son más eficientes en conjuntos de datos grandes, mientras que otros pueden ser más adecuados para conjuntos de datos de alta dimensionalidad.
 
